@@ -1,0 +1,21 @@
+# Netlify Configuration for AniVerse Frontend
+
+[build]
+  # Base directory where package.json is located
+  base = "website copy"
+  
+  # Build command
+  command = "npm run build"
+  
+  # Publish directory (where Vite outputs the built files)
+  publish = "dist"
+
+# Environment variables
+[build.environment]
+  NODE_VERSION = "20"
+
+# Redirects for SPA (React Router)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
