@@ -15,11 +15,8 @@ async function fetchWithErrorHandling(url) {
                 return handleResponse(response);
         } catch (error) {
                 if (error.message === 'Failed to fetch' || error.name === 'TypeError') {
-                        console.error('❌ Backend server not reachable. Make sure:');
-                        console.error('   1. Backend server is running on port 4000');
-                        console.error('   2. Run "npm start" to start both servers');
-                        console.error('   3. Check if data/ folder exists');
-                        throw new Error('Cannot connect to backend server. Please ensure backend is running on port 4000.');
+                        console.error('❌ Backend server not reachable');
+                        throw new Error('Cannot connect to backend server');
                 }
                 throw error;
         }
