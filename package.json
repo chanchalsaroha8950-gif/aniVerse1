@@ -1,24 +1,15 @@
 {
-  "name": "aniverse",
+  "name": "aniverse-frontend",
   "private": true,
-  "version": "0.0.1",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"vite\" \"npm run scrape:watch\"",
-    "server": "node server/index.js",
-    "start": "concurrently \"npm run server\" \"vite\" \"npm run scrape:watch\"",
-    "prod": "npm run build && node server/production.js",
-    "scrape:watch": "node episode-links.js --watch",
+    "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview",
-    "lint": "eslint . --ext .jsx,.js",
-    "check": "node check-setup.js"
+    "preview": "vite preview"
   },
   "dependencies": {
     "axios": "^1.13.2",
-    "cheerio": "^1.1.2",
-    "cors": "^2.8.5",
-    "express": "^5.1.0",
     "lucide-react": "^0.453.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -29,11 +20,6 @@
     "@types/react-dom": "^18.3.2",
     "@vitejs/plugin-react": "^4.3.2",
     "autoprefixer": "^10.4.19",
-    "concurrently": "^9.2.1",
-    "eslint": "^9.11.1",
-    "eslint-plugin-react": "^7.35.0",
-    "eslint-plugin-react-hooks": "^5.1.0",
-    "nodemon": "^3.1.11",
     "postcss": "^8.4.41",
     "tailwindcss": "^3.4.13",
     "vite": "^5.4.7"
