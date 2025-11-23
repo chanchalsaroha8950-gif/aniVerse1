@@ -23,6 +23,12 @@ function Movie() {
                         .finally(() => setLoading(false));
         }, [id]);
 
+        useEffect(() => {
+                if (movie && movie.title) {
+                        document.title = `${movie.title} · LASTANIME`;
+                }
+        }, [movie]);
+
         const normalizedEpisode = useMemo(() => {
                 if (!movie) return null;
                 
@@ -81,69 +87,102 @@ function Movie() {
 
         return (
                 <>
-                        <section className="mx-auto max-w-5xl px-4 py-16">
-                                <div className="grid gap-10 md:grid-cols-[260px,1fr]">
-                                        <img
-                                                src={movie.poster || '/placeholder.jpg'}
-                                                alt={`${movie.title} poster`}
-                                                className="w-full rounded-3xl object-cover"
-                                                style={{ aspectRatio: '2/3' }}
+                        {/* Background Banner Image - Blurred Effect like ToonStream */}
+                        {movie.banner_image && (
+                                <div className="fixed inset-0 z-0">
+                                        <div 
+                                                className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                                                style={{
+                                                        backgroundImage: `url(${movie.banner_image})`,
+                                                        filter: 'blur(6px)',
+                                                        opacity: 0.5,
+                                                }}
                                         />
-                                        <div className="space-y-4">
-                                                <div>
-                                                        <p className="text-sm text-muted">
-                                                                <Link to="/" className="hover:text-primary">
-                                                                        Home
-                                                                </Link>{' '}
-                                                                / Movies
-                                                        </p>
-                                                        <h1 className="mt-2 text-3xl font-semibold text-white">{movie.title}</h1>
-                                                </div>
-                                                <div className="flex flex-wrap gap-3 text-sm text-muted">
-                                                        <span>{movie.release_year || 'Unknown year'}</span>
-                                                        {movie.languages?.length ? (
-                                                                <>
-                                                                        <span>·</span>
-                                                                        <span>{movie.languages.join(', ')}</span>
-                                                                </>
-                                                        ) : null}
-                                                </div>
-                                                <p className="text-muted/80">{normalizedEpisode?.description || 'Description unavailable.'}</p>
-                                                <div className="flex flex-wrap gap-2">
-                                                        {(movie.genres || []).map((genre) => (
-                                                                <span
-                                                                        key={genre}
-                                                                        className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary"
-                                                                >
-                                                                        {genre}
-                                                                </span>
-                                                        ))}
-                                                </div>
-                                                <div className="glass-surface rounded-3xl border border-white/5 p-6">
-                                                        <div className="flex flex-wrap items-center justify-between gap-4">
-                                                                <div>
-                                                                        <h2 className="text-lg font-semibold text-white">Available servers</h2>
-                                                                        <p className="text-sm text-muted">
-                                                                                Click a server to launch playback in the modal. Data comes directly from
-                                                                                <code>movie.json</code>.
-                                                                        </p>
-                                                                </div>
-                                                                <button
-                                                                        type="button"
-                                                                        onClick={() => setPlayerOpen(true)}
-                                                                        className="rounded-full bg-primary px-5 py-3 text-sm font-semibold text-white transition hover:bg-primary/90"
-                                                                >
-                                                                        Play movie
-                                                                </button>
+                                        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-black/80" />
+                                </div>
+                        )}
+                        
+                        <section className="mx-auto max-w-7xl px-4 py-8 md:py-12 relative z-10">
+                                <div className="flex flex-col md:flex-row gap-8">
+                                        {/* Left: Poster Image */}
+                                        <div className="flex-shrink-0">
+                                                <img
+                                                        src={movie.poster || '/placeholder.jpg'}
+                                                        alt={`${movie.title} poster`}
+                                                        className="w-full md:w-64 aspect-[2/3] rounded-2xl object-cover shadow-2xl"
+                                                />
+                                        </div>
+                                        
+                                        {/* Right: Content */}
+                                        <div className="flex-1 space-y-5">
+                                                {/* Breadcrumb */}
+                                                <p className="text-sm text-muted">
+                                                        <Link to="/" className="hover:text-primary">
+                                                                Home
+                                                        </Link>{' '}
+                                                        / Movies
+                                                </p>
+                                                
+                                                {/* Title */}
+                                                <h1 className="text-3xl md:text-4xl font-bold text-white">{movie.title}</h1>
+                                                {/* Genres */}
+                                                {(movie.genres && movie.genres.length > 0) && (
+                                                        <div className="flex flex-wrap gap-1">
+                                                                {movie.genres.map((genre, index) => (
+                                                                        <span key={genre}>
+                                                                                <span className="text-sm text-primary hover:underline cursor-pointer">
+                                                                                        {genre}
+                                                                                </span>
+                                                                                {index < movie.genres.length - 1 && (
+                                                                                        <span className="text-muted">, </span>
+                                                                                )}
+                                                                        </span>
+                                                                ))}
                                                         </div>
-                                                        <div className="mt-4 space-y-2">
+                                                )}
+                                                
+                                                {/* Description */}
+                                                <p className="text-muted/90 leading-relaxed">{normalizedEpisode?.description || 'Description unavailable.'}</p>
+                                                
+                                                {/* Metadata Grid */}
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4 border-y border-white/10">
+                                                        <div>
+                                                                <span className="text-primary font-semibold">Release Year:</span>
+                                                                <span className="ml-2 text-muted">{movie.release_year || 'N/A'}</span>
+                                                        </div>
+                                                        {movie.runtime && (
+                                                                <div>
+                                                                        <span className="text-primary font-semibold">Runtime:</span>
+                                                                        <span className="ml-2 text-muted">{movie.runtime} min</span>
+                                                                </div>
+                                                        )}
+                                                        {movie.languages?.length > 0 && (
+                                                                <div>
+                                                                        <span className="text-primary font-semibold">Languages:</span>
+                                                                        <span className="ml-2 text-muted">{movie.languages.join(', ')}</span>
+                                                                </div>
+                                                        )}
+                                                </div>
+                                                {/* Play Button */}
+                                                <button
+                                                        type="button"
+                                                        onClick={() => setPlayerOpen(true)}
+                                                        className="w-full md:w-auto rounded-lg bg-primary px-8 py-4 text-base font-semibold text-white transition hover:bg-primary/90 shadow-lg"
+                                                >
+                                                        ▶ Watch Now
+                                                </button>
+                                                
+                                                {/* Available Servers */}
+                                                <div className="glass-surface rounded-3xl border border-white/5 p-6 mt-6">
+                                                        <h2 className="text-2xl font-bold text-white mb-4">Available Servers</h2>
+                                                        <div className="space-y-3">
                                                                 {normalizedEpisode?.servers?.length ? (
                                                                         normalizedEpisode.servers.map((server, index) => (
                                                                                 <div
                                                                                         key={server.real_video || index}
-                                                                                        className="flex items-center justify-between rounded-2xl border border-white/10 bg-card/60 px-4 py-3 text-sm text-muted"
+                                                                                        className="flex items-center justify-between rounded-2xl border border-white/10 bg-card/60 px-5 py-4 text-sm text-muted hover:border-primary/50 transition"
                                                                                 >
-                                                                                        <span>
+                                                                                        <span className="font-medium">
                                                                                                 Server {server.option ?? index + 1}
                                                                                         </span>
                                                                                         <button
@@ -151,15 +190,15 @@ function Movie() {
                                                                                                 onClick={() => {
                                                                                                         setPlayerOpen(true);
                                                                                                 }}
-                                                                                                className="rounded-full border border-white/10 px-3 py-1 text-xs font-semibold text-primary transition hover:bg-primary/10"
+                                                                                                className="rounded-full bg-primary/10 border border-primary px-4 py-2 text-xs font-semibold text-primary transition hover:bg-primary hover:text-white"
                                                                                         >
                                                                                                 Play
                                                                                         </button>
                                                                                 </div>
                                                                         ))
                                                                 ) : (
-                                                                        <p className="rounded-2xl bg-card/60 px-4 py-3 text-sm text-muted">
-                                                                                No servers registered. Add them to <code>movie.json</code> to enable playback.
+                                                                        <p className="rounded-2xl bg-card/60 px-5 py-4 text-sm text-muted">
+                                                                                No servers available at the moment.
                                                                         </p>
                                                                 )}
                                                         </div>
