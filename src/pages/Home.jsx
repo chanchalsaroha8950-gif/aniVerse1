@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Search, Filter, Flame, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
 import SeriesCard from '../components/SeriesCard.jsx';
 import SkeletonCard from '../components/SkeletonCard.jsx';
+import HeroCarousel from '../components/HeroCarousel.jsx';
 import { fetchLibrary, fetchLatestEpisodes } from '../api/client.js';
 
 const ITEMS_PER_PAGE = 15;
@@ -66,8 +67,21 @@ function Home() {
                 return ['All', ...Array.from(set)];
         }, [series]);
 
+        const latestEpisodeDates = useMemo(() => {
+                const dateMap = new Map();
+                latestEpisodes.forEach((ep) => {
+                        const slug = ep.seriesSlug;
+                        const date = new Date(ep.addedAt || ep.createdAt || ep.updatedAt || 0);
+                        if (!dateMap.has(slug) || date > dateMap.get(slug)) {
+                                dateMap.set(slug, date);
+                        }
+                });
+                return dateMap;
+        }, [latestEpisodes]);
+
         const filteredSeries = useMemo(() => {
                 let results = [...series];
+                
                 if (typeFilter !== 'All') {
                         results = results.filter((item) => {
                                 if (typeFilter === 'Movies') return item.type === 'movie';
@@ -97,12 +111,14 @@ function Home() {
                 if (sortOrder === 'alphabetical') {
                         results.sort((a, b) => a.title.localeCompare(b.title));
                 } else {
-                        results.sort(
-                                (a, b) => new Date(b.updatedAt || 0) - new Date(a.updatedAt || 0)
-                        );
+                        results.sort((a, b) => {
+                                const dateA = latestEpisodeDates.get(a.slug) || new Date(a.updatedAt || 0);
+                                const dateB = latestEpisodeDates.get(b.slug) || new Date(b.updatedAt || 0);
+                                return dateB - dateA;
+                        });
                 }
                 return results;
-        }, [genreFilter, query, series, sortOrder, letterFilter, typeFilter]);
+        }, [genreFilter, query, series, sortOrder, letterFilter, typeFilter, latestEpisodeDates]);
 
         const totalPages = Math.ceil(filteredSeries.length / ITEMS_PER_PAGE);
         const paginatedSeries = useMemo(() => {
@@ -113,6 +129,14 @@ function Home() {
         useEffect(() => {
                 setCurrentPage(1);
         }, [query, genreFilter, letterFilter, sortOrder, typeFilter]);
+
+        useEffect(() => {
+                if (query.trim()) {
+                        document.title = `Search: ${query} · LASTANIME`;
+                } else {
+                        document.title = 'LASTANIME · Watch Anime Online';
+                }
+        }, [query]);
 
         const trending = useMemo(
                 () => filteredSeries.slice(0, 4),
@@ -125,32 +149,25 @@ function Home() {
         };
 
         const handleEpisodeClick = (ep) => {
-                const seriesSlug = ep.seriesSlug || ep.series.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+                const seriesSlug = ep.seriesSlug || (ep.series ? ep.series.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') : '');
+                if (!seriesSlug) {
+                        console.error('Cannot navigate: series slug is missing', ep);
+                        return;
+                }
                 const episodeId = `${ep.season}-${ep.episode}`;
                 navigate(`/series/${seriesSlug}/episode/${episodeId}`);
         };
 
         return (
-                <section className="space-y-16 pb-20">
-                        <div className="parallax-bg relative isolate overflow-hidden">
-                                <div className="mx-auto flex max-w-4xl flex-col items-center justify-center gap-8 px-4 py-24 text-center">
-                                        <p className="flex items-center gap-2 rounded-full border border-white/10 bg-card/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-                                                <Flame size={14} />
-                                                Stream instantly
-                                        </p>
-                                        <h1 className="text-6xl font-bold tracking-tight text-white sm:text-7xl bg-gradient-to-r from-primary via-purple-500 to-pink-500 bg-clip-text text-transparent">
-                                                AniVerse
-                                        </h1>
-                                        <p className="max-w-2xl text-lg text-muted">
-                                                Your ultimate anime streaming destination. Browse thousands of series and movies,
-                                                pick your episode, and start watching instantly.
-                                        </p>
+                <section className="home-background space-y-16 pb-20">
+                        {!loading && series.length > 0 && !query.trim() && (
+                                <div className="max-w-[1000px] mx-auto pt-8">
+                                        <HeroCarousel series={series} />
                                 </div>
-                                <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-skin to-transparent" />
-                        </div>
+                        )}
 
                         <div className="mx-auto flex max-w-7xl flex-col gap-10 px-4">
-                        {latestEpisodes.length > 0 && (
+                        {latestEpisodes.length > 0 && !query.trim() && (
                                 <>
                                         <div className="flex flex-col gap-4">
                                                 <h2 className="text-2xl font-semibold text-white flex items-center gap-2">
@@ -170,18 +187,19 @@ function Home() {
                                                                                                 <img 
                                                                                                         src={ep.thumbnail} 
                                                                                                         alt={ep.title} 
-                                                                                                        className="w-full h-full object-cover"
+                                                                                                        className="w-full h-full object-cover object-center"
                                                                                                         loading="lazy"
+                                                                                                        style={{ imageRendering: 'high-quality' }}
                                                                                                 />
                                                                                         ) : (
                                                                                                 <div className="w-full h-full bg-card/60 flex items-center justify-center">
                                                                                                         <Sparkles size={32} className="text-muted" />
                                                                                                 </div>
                                                                                         )}
-                                                                                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent" />
+                                                                                        <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/20 to-transparent" />
                                                                                         <div className="absolute bottom-0 left-0 right-0 p-2">
-                                                                                                <p className="text-xs font-semibold text-white truncate">{ep.series}</p>
-                                                                                                <p className="text-xs text-primary">S{ep.season}E{ep.episode}</p>
+                                                                                                <p className="text-[10px] sm:text-xs font-medium text-white truncate leading-tight">{ep.series}</p>
+                                                                                                <p className="text-[9px] sm:text-[10px] text-primary mt-0.5">S{ep.season}E{ep.episode}</p>
                                                                                         </div>
                                                                                 </div>
                                                                         </div>
@@ -196,10 +214,21 @@ function Home() {
                                 <div className="flex flex-col gap-4">
                                         <div className="flex flex-wrap items-center justify-between gap-3">
                                                 <div>
-                                                        <h2 className="text-2xl font-semibold text-white">Latest library updates</h2>
-                                                        <p className="text-sm text-muted">
-                                                                Sorted by filesystem mtime. Scraper saves appear here automatically.
-                                                        </p>
+                                                        <h2 className="text-2xl font-semibold text-white flex items-center gap-2">
+                                                                {query.trim() ? (
+                                                                        <>
+                                                                                <Search size={24} className="text-primary" />
+                                                                                Your Results
+                                                                        </>
+                                                                ) : (
+                                                                        'Latest library updates'
+                                                                )}
+                                                        </h2>
+                                                        {!query.trim() && (
+                                                                <p className="text-sm text-muted">
+                                                                        Sorted by filesystem mtime. Scraper saves appear here automatically.
+                                                                </p>
+                                                        )}
                                                 </div>
                                                 <div className="glass-surface flex items-center gap-2 rounded-full px-3 py-1 text-xs">
                                                         <Filter size={16} />
@@ -264,7 +293,7 @@ function Home() {
                                 </div>
 
                                 {loading ? (
-                                        <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-5">
+                                        <div className="grid gap-3 grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
                                                 {Array.from({ length: 15 }).map((_, index) => (
                                                         <SkeletonCard key={index} />
                                                 ))}
@@ -279,7 +308,7 @@ function Home() {
                                         </div>
                                 ) : (
                                         <>
-                                                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+                                                <div className="grid gap-3 grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
                                                         {paginatedSeries.map((item) => (
                                                                 <SeriesCard
                                                                         key={item.slug}
