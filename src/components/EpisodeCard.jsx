@@ -1,51 +1,29 @@
-import { Github, Twitter } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-function Footer() {
+function EpisodeCard({ episode, seriesSlug }) {
+  const href = `/series/${seriesSlug}/episode/${episode.id}`;
+  
   return (
-    <footer className="border-t border-white/5 bg-[rgba(6,10,18,0.8)] backdrop-blur-lg">
-      <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-8 text-sm text-muted md:flex-row md:items-center md:justify-between">
-        <nav className="flex gap-5">
-          <Link className="hover:text-primary focus-visible:text-primary" to="/about">
-            About
-          </Link>
-          <Link className="hover:text-primary focus-visible:text-primary" to="/privacy">
-            Privacy
-          </Link>
-          <Link className="hover:text-primary focus-visible:text-primary" to="/contact">
-            Contact
-          </Link>
-        </nav>
-        <div className="flex flex-col items-center gap-3 md:items-end">
-          <div className="flex items-center gap-3">
-            <a
-              href="https://github.com/himanshusaroha648"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="GitHub"
-              className="rounded-full border border-white/10 bg-card/60 p-2 text-muted transition hover:text-primary"
-            >
-              <Github size={18} />
-            </a>
-            <a
-              href="https://x.com/himanshusa4020"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="X / Twitter"
-              className="rounded-full border border-white/10 bg-card/60 p-2 text-muted transition hover:text-primary"
-            >
-              <Twitter size={18} />
-            </a>
-          </div>
-          <p className="text-xs text-center md:text-right">
-            <span className="text-muted/70">© {new Date().getFullYear()} AniVerse · Concept UI</span>
-            <br />
-            <span className="text-primary/80 font-semibold">⚠️ Project in Development</span>
-          </p>
-        </div>
+    <Link
+      to={href}
+      className="card-hover relative block overflow-hidden rounded-lg md:rounded-2xl bg-card p-1 md:p-2 focus-visible:ring-2 focus-visible:ring-primary"
+    >
+      <img
+        src={episode.thumbnail || episode.episode_card_thumbnail || '/placeholder.jpg'}
+        alt={`${episode.title} thumbnail`}
+        loading="lazy"
+        className="w-full aspect-video rounded-md md:rounded-xl object-cover"
+      />
+      <div className="absolute inset-0 rounded-lg md:rounded-2xl bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-80" />
+      <div className="absolute inset-x-1.5 bottom-1.5 md:inset-x-3 md:bottom-3 z-10">
+        <p className="text-[8px] md:text-xs uppercase text-muted truncate">
+          Episode {episode.number}
+          {episode.duration && ` · ${episode.duration}`}
+        </p>
+        <h3 className="mt-0.5 md:mt-1 text-[10px] md:text-sm font-semibold text-white line-clamp-2">{episode.title}</h3>
       </div>
-    </footer>
+    </Link>
   );
 }
 
-export default Footer;
+export default EpisodeCard;
