@@ -38,7 +38,7 @@ function Footer() {
             </a>
           </div>
           <p className="text-xs text-center md:text-right">
-            <span className="text-muted/70">© {new Date().getFullYear()} AniVerse · Concept UI</span>
+            <span className="text-muted/70">© {new Date().getFullYear()} LASTANIME · Concept UI</span>
             <br />
             <span className="text-primary/80 font-semibold">⚠️ Project in Development</span>
           </p>
