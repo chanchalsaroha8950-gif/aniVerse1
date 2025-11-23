@@ -1,11 +1,6 @@
-<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-  <defs>
-    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0B78FF"/>
-      <stop offset="100%" stop-color="#8B5CF6"/>
-    </linearGradient>
-  </defs>
-  <circle cx="32" cy="32" r="30" fill="url(#grad)" opacity="0.9"/>
-  <path d="M20 40C22 26 28 18 40 16C34 20 32 24 32 32C32 40 28 46 20 48Z" fill="#ffffff" opacity="0.85"/>
-  <path d="M44 38C40 44 34 48 26 48C32 44 36 40 36 32C36 24 39 20 48 16C46 24 46 32 44 38Z" fill="#ffffff" opacity="0.7"/>
+<svg width="140" height="140" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="100" cy="100" r="90" fill="#0a0a0f" stroke="#00eaff" stroke-width="6"
+    style="filter: drop-shadow(0 0 10px #00eaff);"/>
+  <path d="M60 120 Q100 40 140 120" stroke="#00eaff" stroke-width="8" fill="none"
+    style="filter: drop-shadow(0 0 10px #00eaff);"/>
 </svg>
