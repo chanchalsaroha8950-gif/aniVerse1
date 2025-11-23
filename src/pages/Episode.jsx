@@ -88,7 +88,7 @@ function Episode() {
                                 episodeData.episode_list_thumbnail ||
                                 '/placeholder.jpg',
                         servers: Array.isArray(episodeData.servers)
-                                ? episodeData.servers.filter((server) => server?.real_video)
+                                ? episodeData.servers.filter((server) => server?.url || server?.real_video)
                                 : [],
                         releaseDate: episodeData.releaseDate || ''
                 };
@@ -158,14 +158,35 @@ function Episode() {
 
         return (
                 <>
-                        <section className="parallax-bg relative isolate overflow-hidden">
-                                <div className="mx-auto flex max-w-4xl flex-col items-center justify-center gap-6 px-4 py-16 text-center">
-                                        <img
-                                                src={normalizedEpisode.thumbnail || seriesMeta.poster || '/placeholder.jpg'}
-                                                alt={`${seriesMeta.title} - Season ${parsed.season} Episode ${parsed.episode}`}
-                                                className="h-64 w-auto rounded-3xl object-cover shadow-2xl"
+                        {/* Background Banner Image - Blurred Effect */}
+                        {seriesMeta.banner_image && (
+                                <div className="fixed inset-0 z-0">
+                                        <div 
+                                                className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                                                style={{
+                                                        backgroundImage: `url(${seriesMeta.banner_image})`,
+                                                        filter: 'blur(2px)',
+                                                        opacity: 0.7,
+                                                }}
                                         />
-                                        <div>
+                                        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-black/80" />
+                                </div>
+                        )}
+                        
+                        <section className="mx-auto max-w-7xl px-4 py-8 md:py-12 relative z-10">
+                                <div className="flex flex-col md:flex-row gap-8">
+                                        {/* Left: Poster Image */}
+                                        <div className="flex-shrink-0">
+                                                <img
+                                                        src={seriesMeta.poster || '/placeholder.jpg'}
+                                                        alt={`${seriesMeta.title} poster`}
+                                                        className="w-full md:w-64 aspect-[2/3] rounded-2xl object-cover shadow-2xl"
+                                                />
+                                        </div>
+                                        
+                                        {/* Right: Content */}
+                                        <div className="flex-1 space-y-5">
+                                                {/* Breadcrumb */}
                                                 <p className="text-sm text-muted">
                                                         <Link to="/" className="hover:text-primary">
                                                                 Home
@@ -174,42 +195,79 @@ function Episode() {
                                                         <Link to={`/series/${id}`} className="hover:text-primary">
                                                                 {seriesMeta.title}
                                                         </Link>
+                                                        {' '}/ Episode {parsed.episode}
                                                 </p>
-                                                <h1 className="mt-2 text-4xl font-semibold tracking-tight text-white sm:text-5xl">
-                                                        {seriesMeta.title}
-                                                </h1>
-                                                <p className="mt-2 text-lg text-primary font-semibold">
+                                                
+                                                {/* Title */}
+                                                <h1 className="text-3xl md:text-4xl font-bold text-white">{seriesMeta.title}</h1>
+                                                
+                                                {/* Episode Info */}
+                                                <p className="text-lg text-primary font-semibold">
                                                         Season {parsed.season} • Episode {parsed.episode}
+                                                        {normalizedEpisode.title && normalizedEpisode.title !== `Episode ${parsed.episode}` && ` - ${normalizedEpisode.title}`}
                                                 </p>
+                                                
+                                                {/* Genres */}
+                                                {(seriesMeta.genres && seriesMeta.genres.length > 0) && (
+                                                        <div className="flex flex-wrap gap-1">
+                                                                {seriesMeta.genres.map((genre, index) => (
+                                                                        <span key={genre}>
+                                                                                <span className="text-sm text-primary hover:underline cursor-pointer">
+                                                                                        {genre}
+                                                                                </span>
+                                                                                {index < seriesMeta.genres.length - 1 && (
+                                                                                        <span className="text-muted">, </span>
+                                                                                )}
+                                                                        </span>
+                                                                ))}
+                                                        </div>
+                                                )}
+                                                
+                                                {/* Description */}
+                                                <p className="text-muted/90 leading-relaxed">
+                                                        {normalizedEpisode.description || seriesMeta.description || 'Description unavailable.'}
+                                                </p>
+                                                
+                                                {/* Episode Metadata */}
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4 border-y border-white/10">
+                                                        {normalizedEpisode.duration && (
+                                                                <div>
+                                                                        <span className="text-primary font-semibold">Duration:</span>
+                                                                        <span className="ml-2 text-muted">{normalizedEpisode.duration}</span>
+                                                                </div>
+                                                        )}
+                                                        {normalizedEpisode.releaseDate && (
+                                                                <div>
+                                                                        <span className="text-primary font-semibold">Release Date:</span>
+                                                                        <span className="ml-2 text-muted">{normalizedEpisode.releaseDate}</span>
+                                                                </div>
+                                                        )}
+                                                        <div>
+                                                                <span className="text-primary font-semibold">Season:</span>
+                                                                <span className="ml-2 text-muted">{parsed.season}</span>
+                                                        </div>
+                                                        <div>
+                                                                <span className="text-primary font-semibold">Episode Number:</span>
+                                                                <span className="ml-2 text-muted">{parsed.episode}</span>
+                                                        </div>
+                                                </div>
+                                                
+                                                {/* Play Button */}
+                                                <button
+                                                        type="button"
+                                                        onClick={() => setPlayerOpen(true)}
+                                                        className="rounded-full bg-primary px-8 py-4 text-base font-semibold text-white shadow-lg transition hover:bg-primary/90 hover:shadow-xl"
+                                                >
+                                                        Play Episode
+                                                </button>
                                         </div>
-                                        <button
-                                                type="button"
-                                                onClick={() => setPlayerOpen(true)}
-                                                className="rounded-full bg-primary px-8 py-4 text-base font-semibold text-white shadow-lg transition hover:bg-primary/90 hover:shadow-xl"
-                                        >
-                                                Play Episode
-                                        </button>
                                 </div>
-                                <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-skin to-transparent" />
                         </section>
 
-                        <section className="mx-auto max-w-6xl px-4 py-10">
-                                <div className="glass-surface rounded-3xl border border-white/5 p-6">
-                                        <h2 className="text-xl font-semibold text-white">{normalizedEpisode.title}</h2>
-                                        <p className="mt-1 text-sm text-muted">
-                                                {normalizedEpisode.duration && `${normalizedEpisode.duration} · `}
-                                                {normalizedEpisode.releaseDate}
-                                        </p>
-                                        {normalizedEpisode.description && (
-                                                <p className="mt-4 text-sm text-muted/90">
-                                                        {normalizedEpisode.description}
-                                                </p>
-                                        )}
-                                </div>
-
+                        <section className="mx-auto max-w-6xl px-4 py-10 relative z-10">
                                 {seriesMeta?.episodes && Object.keys(seriesMeta.episodes).length > 1 && (
                                         <div className="mt-8">
-                                                <h3 className="mb-4 text-lg font-semibold text-white">Seasons</h3>
+                                                <h3 className="mb-3 sm:mb-4 text-base sm:text-lg font-semibold text-white">Seasons</h3>
                                                 <div className="flex flex-wrap gap-2">
                                                         {Object.keys(seriesMeta.episodes).sort((a, b) => Number(a) - Number(b)).map((seasonNum) => (
                                                                 <button
@@ -221,7 +279,7 @@ function Episode() {
                                                                                         handleNavigateEpisode(seasonNum, firstEp.number);
                                                                                 }
                                                                         }}
-                                                                        className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+                                                                        className={`rounded-full px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold transition ${
                                                                                 parsed.season === seasonNum
                                                                                         ? 'bg-primary text-white'
                                                                                         : 'bg-card text-muted hover:text-primary hover:bg-card/80'
@@ -236,8 +294,8 @@ function Episode() {
 
                                 {allSeasonEpisodes.length > 0 && (
                                         <div className="mt-8">
-                                                <h3 className="mb-4 text-lg font-semibold text-white">Episodes - Season {parsed.season}</h3>
-                                                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                                                <h3 className="mb-3 sm:mb-4 text-base sm:text-lg font-semibold text-white">Episodes - Season {parsed.season}</h3>
+                                                <div className="grid gap-3 grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
                                                         {allSeasonEpisodes.map((ep) => (
                                                                 <EpisodeCard key={ep.id} episode={ep} seriesSlug={id} />
                                                         ))}
@@ -252,6 +310,7 @@ function Episode() {
                                 episode={normalizedEpisode}
                                 onPrev={handlePrev}
                                 onNext={handleNext}
+                                seriesTitle={seriesMeta?.title}
                         />
                 </>
         );
