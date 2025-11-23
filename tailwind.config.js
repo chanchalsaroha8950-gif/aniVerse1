@@ -5,16 +5,17 @@ export default {
     theme: {
       extend: {
         colors: {
-          primary: 'var(--primary)',
-          accent: 'var(--accent)',
-          muted: 'var(--muted)'
+          primary: 'var(--color-primary)',
+          secondary: 'var(--color-secondary)',
+          accent: 'var(--color-accent)',
+          muted: 'var(--color-muted)'
         },
         backgroundColor: {
-          skin: 'var(--bg)',
-          card: 'var(--card)'
+          skin: 'var(--color-bg)',
+          card: 'var(--color-card)'
         },
         textColor: {
-          skin: 'var(--text)'
+          skin: '#e6eef3'
         },
         boxShadow: {
           floating: '0 20px 45px rgba(11, 120, 255, 0.18)'
