@@ -5,7 +5,7 @@ function NotFound() {
     <section className="flex h-[70vh] flex-col items-center justify-center gap-6 bg-card/40 text-center">
       <h1 className="text-5xl font-semibold text-white">404</h1>
       <p className="max-w-xl text-muted">
-        The page you’re searching for drifted into the void. Launch back to AniVerse and continue the
+        The page you’re searching for drifted into the void. Launch back to LASTANIME and continue the
         journey.
       </p>
       <Link
