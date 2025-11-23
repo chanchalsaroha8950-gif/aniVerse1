@@ -1,7 +1,7 @@
 import { Menu, Search, SunMedium, ChevronDown, Shuffle } from 'lucide-react';
 import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useState, useRef, useEffect } from 'react';
-import ThemeToggle from './ThemeToggle.jsx';
+import ThemeSelector from './ThemeSelector.jsx';
 import { fetchLibrary } from '../api/client.js';
 
 function Header() {
@@ -53,28 +53,61 @@ function Header() {
     }
   };
 
+  const handleHomeClick = () => {
+    setSearchQuery('');
+    window.dispatchEvent(new CustomEvent('header-search', { 
+      detail: { query: '', type: 'All' } 
+    }));
+  };
+
   return (
     <header className="sticky top-0 z-50 bg-[rgba(6,10,18,0.8)] backdrop-blur-lg border-b border-white/5">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4">
-        <div className="flex items-center gap-3">
-          <Link to="/" aria-label="AniVerse home" className="flex items-center gap-2">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 px-3 py-2.5 sm:gap-4 sm:px-4 sm:py-4">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <Link to="/" aria-label="LASTANIME home" className="flex items-center gap-1.5 sm:gap-2" onClick={handleHomeClick}>
             <img
               src="/logo-symbol.svg"
-              alt="AniVerse symbol"
-              className="h-8 w-8 drop-shadow-lg"
+              alt="LASTANIME symbol"
+              className="h-6 w-6 sm:h-8 sm:w-8 drop-shadow-lg"
               draggable="false"
             />
-            <span className="text-xl font-bold bg-gradient-to-r from-blue-600 via-blue-800 to-black bg-clip-text text-transparent hidden sm:inline">
-              AniVerse
+            <span className="text-sm sm:text-xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+              LASTANIME
             </span>
           </Link>
-          
+
+          <nav className="hidden items-center gap-5 text-sm md:flex">
+            <NavLink
+              to="/"
+              onClick={handleHomeClick}
+              className={({ isActive }) =>
+                `transition-colors ${
+                  isActive ? 'text-primary' : 'text-muted hover:text-primary'
+                }`
+              }
+            >
+              Home
+            </NavLink>
+            <NavLink
+              to="/collection"
+              className={({ isActive }) =>
+                `transition-colors ${
+                  isActive ? 'text-primary' : 'text-muted hover:text-primary'
+                }`
+              }
+            >
+              Collections
+            </NavLink>
+          </nav>
+        </div>
+
+        <div className="flex items-center gap-1.5 sm:gap-3">
           <div className="relative" ref={searchRef}>
             <button
               type="button"
               onClick={() => setSearchOpen(!searchOpen)}
               aria-label="Open search"
-              className="flex items-center gap-2 rounded-full border border-white/10 bg-card/60 px-3 py-2 text-muted transition hover:text-primary hover:border-primary/50"
+              className="flex items-center gap-1 sm:gap-2 rounded-full border border-white/10 bg-card/60 p-2 sm:px-3 sm:py-2 text-muted transition hover:text-primary hover:border-primary/50"
             >
               <Search size={18} />
               <span className="text-sm font-medium hidden sm:inline">Search</span>
@@ -126,41 +159,16 @@ function Header() {
             )}
           </div>
 
-          <nav className="hidden items-center gap-5 text-sm md:flex">
-            <NavLink
-              to="/"
-              className={({ isActive }) =>
-                `transition-colors ${
-                  isActive ? 'text-primary' : 'text-muted hover:text-primary'
-                }`
-              }
-            >
-              Home
-            </NavLink>
-            <NavLink
-              to="/collection"
-              className={({ isActive }) =>
-                `transition-colors ${
-                  isActive ? 'text-primary' : 'text-muted hover:text-primary'
-                }`
-              }
-            >
-              Collections
-            </NavLink>
-          </nav>
-        </div>
-
-        <div className="flex items-center gap-3">
           <button
             type="button"
             onClick={handleRandomAnime}
             aria-label="Random Anime"
-            className="flex items-center gap-2 rounded-full border border-white/10 bg-card/60 px-3 py-2 text-muted transition hover:text-primary hover:border-primary/50"
+            className="flex items-center gap-1 sm:gap-2 rounded-full border border-white/10 bg-card/60 p-2 sm:px-3 sm:py-2 text-muted transition hover:text-primary hover:border-primary/50"
           >
             <Shuffle size={18} />
             <span className="text-sm font-medium hidden sm:inline">Random</span>
           </button>
-          <ThemeToggle />
+          <ThemeSelector />
           <button
             type="button"
             aria-label="Open menu"
