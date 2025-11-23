@@ -3,40 +3,13 @@
 @tailwind utilities;
 
 :root {
-  --bg: #0b0f14;
-  --card: #0f1724;
-  --text: #e6eef3;
-  --muted: #9aa6b2;
-  --primary: #0b78ff;
-  --accent: #8b5cf6;
+  --color-bg: #000000;
+  --color-card: #0a0a0a;
+  --color-primary: #0B78FF;
+  --color-secondary: #8B5CF6;
+  --color-muted: #6B7280;
+  --color-accent: #06b6d4;
   --glass: rgba(255, 255, 255, 0.03);
-}
-
-:root.theme-dark {
-  --bg: #0b0f14;
-  --card: #0f1724;
-  --text: #e6eef3;
-  --muted: #9aa6b2;
-  --primary: #0b78ff;
-  --accent: #8b5cf6;
-}
-
-:root.theme-darkBlue {
-  --bg: #071029;
-  --card: #0b2438;
-  --text: #e3ebf5;
-  --muted: #95a4c4;
-  --primary: #1e90ff;
-  --accent: #3359ff;
-}
-
-:root.theme-nightNeon {
-  --bg: #01040a;
-  --card: #071028;
-  --text: #e5f8ff;
-  --muted: #8ca5bf;
-  --primary: #00e5ff;
-  --accent: #ff3da6;
 }
 
 body {
@@ -47,7 +20,7 @@ body {
   width: 10px;
 }
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, var(--primary), var(--accent));
+  background: linear-gradient(180deg, var(--color-primary), var(--color-accent));
   border-radius: 10px;
 }
 
@@ -90,7 +63,7 @@ body {
 
 button:focus-visible,
 a:focus-visible {
-  outline: 2px solid var(--primary);
+  outline: 2px solid var(--color-primary);
   outline-offset: 3px;
 }
 /* Latest Episodes Horizontal Scroll */
@@ -108,7 +81,7 @@ a:focus-visible {
   padding: 4px 0 12px 0;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
-  scrollbar-color: var(--primary) transparent;
+  scrollbar-color: var(--color-primary) transparent;
 }
 
 /* Custom horizontal scrollbar */
@@ -122,17 +95,17 @@ a:focus-visible {
 }
 
 .episode-scroll::-webkit-scrollbar-thumb {
-  background: linear-gradient(90deg, var(--primary), var(--accent));
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
   border-radius: 3px;
 }
 
 .episode-scroll::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(90deg, var(--accent), var(--primary));
+  background: linear-gradient(90deg, var(--color-accent), var(--color-primary));
 }
 
 .episode-card-horizontal {
   flex: 0 0 auto;
-  width: 240px;
+  width: 180px;
   cursor: pointer;
   transition: transform 0.2s ease, filter 0.2s ease;
 }
@@ -152,10 +125,53 @@ a:focus-visible {
   transform: scale(0.98);
 }
 
+/* Home Background */
+.home-background {
+  position: relative;
+  min-height: 100vh;
+}
+
+.home-background::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('https://smttcyfcjhfilblvcinn.supabase.co/storage/v1/object/public/anime/thumb-1920-533009.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(6px);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.home-background::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.home-background > * {
+  position: relative;
+  z-index: 1;
+}
+
 /* Mobile responsive */
-@media (max-width: 640px) {
+@media (max-width: 768px) {
+  .home-background::before {
+    background-image: url('https://smttcyfcjhfilblvcinn.supabase.co/storage/v1/object/public/anime/1012690.png');
+  }
+  
   .episode-card-horizontal {
-    width: 200px;
+    width: 160px;
   }
   
   .episode-scroll {
