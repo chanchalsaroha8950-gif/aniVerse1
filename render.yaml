@@ -1,0 +1,19 @@
+# Render Deployment Config - Backend Only
+services:
+  - type: web
+    name: aniverse-backend-api
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server/index-supabase.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 4000
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+    healthCheckPath: /
+    autoDeploy: true

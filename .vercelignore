@@ -1,0 +1,16 @@
+node_modules
+.env
+.env.local
+dist
+server
+BANNER-IMAGE-SETUP.md
+check-supabase-schema.js
+episode-links.js
+IMPORT-INSTRUCTIONS.md
+import-to-supabase.js
+SUPABASE-DIRECT-SYNC-README.md
+SUPABASE-QUICK-START.md
+supabase-schema-updated.sql
+supabase-schema.sql
+SUPABASE-SETUP.md
+*.md
