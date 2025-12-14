@@ -125,6 +125,42 @@ a:focus-visible {
   transform: scale(0.98);
 }
 
+/* Filter Buttons Horizontal Scroll */
+.filter-scroll-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.filter-scroll {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  padding: 4px 0 12px 0;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-primary) transparent;
+}
+
+.filter-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.filter-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+}
+
+.filter-scroll::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  border-radius: 3px;
+}
+
+.filter-scroll::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(90deg, var(--color-accent), var(--color-primary));
+}
+
 /* Home Background */
 .home-background {
   position: relative;
@@ -164,6 +200,53 @@ a:focus-visible {
   z-index: 1;
 }
 
+/* Suggested Anime Horizontal Scroll */
+.suggested-anime-scroll-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.suggested-anime-scroll {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  padding: 4px 0 12px 0;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-primary) transparent;
+}
+
+.suggested-anime-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.suggested-anime-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+}
+
+.suggested-anime-scroll::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  border-radius: 3px;
+}
+
+.suggested-anime-scroll::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(90deg, var(--color-accent), var(--color-primary));
+}
+
+.suggested-anime-card {
+  flex: 0 0 auto;
+  width: 180px;
+}
+
+.suggested-anime-card img {
+  aspect-ratio: 3/4 !important;
+  object-fit: cover;
+  object-position: center;
+}
+
 /* Mobile responsive */
 @media (max-width: 768px) {
   .home-background::before {
@@ -176,5 +259,13 @@ a:focus-visible {
   
   .episode-scroll {
     gap: 8px;
+  }
+  
+  .suggested-anime-card {
+    width: 140px;
+  }
+  
+  .suggested-anime-scroll {
+    gap: 12px;
   }
 }
